@@ -59,6 +59,9 @@ contract ConsensualMessaging {
                 // Delete the old encryption
                 messages[i] = messages[messages.length-1];
                 messages.pop();
+                // console.log(from);
+                // console.log(to);
+                // console.log(current.message);
                 emit MatchEvent(from, to, current.message);
                 emit MatchEvent(to, from, current.message);
                 return true;

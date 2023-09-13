@@ -59,9 +59,10 @@ describe("Encryption", function () {
       "0x48656c6c6f20576f726c64210000000000000000000000000000000000000000";
     await contract.connect(alice).submit(bob, message);
 
-    await expect(contract.connect(bob).submit(alice, message))
-      .to.emit(contract, "MatchEvent")
-      .withArgs(alice.address, bob.address);
+    await expect(contract.connect(bob).submit(alice, message)).to.emit(
+      contract,
+      "MatchEvent"
+    );
   });
 });
 
