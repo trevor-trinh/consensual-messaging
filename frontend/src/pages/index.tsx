@@ -34,7 +34,10 @@ export default function Home(props: any) {
       return
     }
 
-    const code = 'ABCDEF'
+    const code = [...Array(6)]
+      .map(() => String.fromCharCode(65 + Math.floor(Math.random() * 26)))
+      .join('')
+
     socket.emit('create', name, address, code, () => {
       router.push({ pathname: '/lobby', query: { name, room: code } })
     })

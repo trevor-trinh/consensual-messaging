@@ -57,28 +57,30 @@ io.on('connection', (socket) => {
     socket.data.name = name
     socket.data.address = address
     socket.join(room)
-    const details = await fetchDetails()
-    io.to('room').emit('details', details)
 
-    socket.to('room').emit(room_names_addresses)
-
-    callback()
+    fetchDetails(room, (room_names_addresses) => {
+      console.log('Emitting ')
+      io.to(room).emit('details', room_names_addresses)
+      callback()
+    })
   })
 
-  socket.on('fetchusers', async function (room, callback) {
-    console.log(room)
+  async function fetchDetails(room, callback) {
+    // console.log(room)
     const roomsockets = await io.in(room).fetchSockets()
     let room_names_addresses = [] // {name: name, address: address}
-    console.log(roomsockets)
+    // console.log(roomsockets)
     for (let i = 0; i < roomsockets.length; i++) {
       room_names_addresses.push({
         name: roomsockets[i].data.name,
         address: roomsockets[i].data.address,
       })
     }
-    console.log(room_names_addresses)
+    // console.log(room_names_addresses)
     callback(room_names_addresses)
-  })
+  }
+
+  socket.on('fetchusers', fetchDetails)
 
   socket.on('disconnect', () => {
     console.log('user disconnected')

@@ -7,6 +7,8 @@ import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { sepolia } from 'wagmi/chains'
 import { Toaster } from 'react-hot-toast'
 import { io } from 'socket.io-client'
+import { useState, useEffect } from 'react'
+import { Player } from '@/types'
 
 const chains = [sepolia]
 const projectId = 'c7e93f07bce83658ef0667c21231faa2'
@@ -22,11 +24,39 @@ const ethereumClient = new EthereumClient(wagmiConfig, chains)
 const socket = io('localhost:3001')
 
 export default function App({ Component, pageProps }: AppProps) {
+  const [players, setPlayers] = useState<Player[]>([])
+
+  useEffect(() => {
+    // function onConnect() {
+    //   setIsConnected(true)
+    // }
+
+    // function onDisconnect() {
+    //   setIsConnected(false)
+    // }
+
+    function onChangePlayers(players: Player[]) {
+      console.log('changing players')
+      console.log(players)
+      setPlayers(players)
+    }
+
+    // socket.on('connect', onConnect)
+    // socket.on('disconnect', onDisconnect)
+    socket.on('details', onChangePlayers)
+
+    return () => {
+      // socket.off('connect', onConnect)
+      // socket.off('disconnect', onDisconnect)
+      socket.off('details', onChangePlayers)
+    }
+  }, [])
+
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
         <ChakraProvider>
-          <Component {...pageProps} socket={socket} />
+          <Component {...pageProps} socket={socket} people={players} />
         </ChakraProvider>
       </WagmiConfig>
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />

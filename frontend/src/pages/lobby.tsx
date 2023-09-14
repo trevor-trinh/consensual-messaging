@@ -6,18 +6,20 @@ import { useEffect, useState } from 'react'
 
 export default function Lobby(props: any) {
   const router = useRouter()
-  const { socket } = props
+  const { socket, people } = props
   const { name, room } = router.query
-  const [people, setPeople] = useState<Player[]>([])
+  // const [people, setPeople] = useState<Player[]>([])
 
   useEffect(() => {
     if (!router.query.name) {
       router.push('/')
     }
     console.log(room)
-    socket.emit('fetchusers', room, (people: any) => setPeople(people))
-  }, [setPeople])
+    // socket.emit('fetchusers', room, (people: any) => setPeople(people))
+  }, [])
+
   console.log(people)
+
   const handleStart = () => {
     router.push({
       pathname: '/game',
