@@ -14,7 +14,7 @@ import { useEffect, useState } from 'react'
 import { Player } from '@/types'
 import SignalButton from '@/components/SignalButton'
 
-export default function Game() {
+export default function Game(props: any) {
   const router = useRouter()
 
   const [timeLeft, setTimeLeft] = useState(30)
@@ -31,6 +31,8 @@ export default function Game() {
   // }, [timeLeft])
 
   // gets the list of names+addresses from backend
+  const { socket } = props
+
   useEffect(() => {
     // fetch('/api/game')
     //   .then((res) => res.json())

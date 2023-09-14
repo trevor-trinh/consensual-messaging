@@ -2,10 +2,12 @@ import Layout from '@/components/Layout'
 import { useEffect, useState } from 'react'
 import { Text, Input, Button } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import { useAccount } from 'wagmi'
 
-export default function Join() {
+export default function Join(props: any) {
   const router = useRouter()
   const [code, setCode] = useState('')
+  const { socket } = props
 
   useEffect(() => {
     if (!router.query.name) {
@@ -13,8 +15,17 @@ export default function Join() {
     }
   }, [])
 
+  const { address, isConnecting, isDisconnected } = useAccount()
+
   const handleJoin = () => {
-    router.push({ pathname: '/lobby', query: { name: router.query.name } })
+    if (isConnecting || isDisconnected) {
+      alert('Please connect your wallet')
+      return false
+    }
+
+    socket.emit('create', router.query.name, address, code, () => {
+      router.push({ pathname: '/lobby', query: { name: router.query.name } })
+    })
   }
 
   return (

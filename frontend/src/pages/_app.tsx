@@ -6,6 +6,7 @@ import { Web3Modal } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
 import { sepolia } from 'wagmi/chains'
 import { Toaster } from 'react-hot-toast'
+import { io } from 'socket.io-client'
 
 const chains = [sepolia]
 const projectId = 'c7e93f07bce83658ef0667c21231faa2'
@@ -18,12 +19,14 @@ const wagmiConfig = createConfig({
 })
 const ethereumClient = new EthereumClient(wagmiConfig, chains)
 
+const socket = io('localhost:3001')
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
     <>
       <WagmiConfig config={wagmiConfig}>
         <ChakraProvider>
-          <Component {...pageProps} />
+          <Component {...pageProps} socket={socket} />
         </ChakraProvider>
       </WagmiConfig>
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
