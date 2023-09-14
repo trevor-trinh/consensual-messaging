@@ -27,17 +27,9 @@ export default function Game(props: any) {
   const [timeLeft, setTimeLeft] = useState(30)
   const [selectedPlayer, setSelectedPlayer] = useState<Player>()
   const [showResults, setShowResults] = useState(false)
-  const [matches, setMatches] = useState<MatchEvent[]>([])
-  const [myMatch, setMyMatch] = useState<MatchEvent>()
+  const [match, setMatch] = useState()
 
   const { address, isConnecting, isDisconnected } = useAccount()
-
-  useEffect(() => {
-    const foundMatch = matches.find(
-      (match) => match.from === address || match.to === address
-    )
-    setMyMatch(foundMatch)
-  }, [matches, address])
 
   // timer for round to end
   // useEffect(() => {
@@ -53,14 +45,24 @@ export default function Game(props: any) {
     abi: ConsensualMessagingJson.abi,
     eventName: 'MatchEvent',
     listener(log) {
-      console.log(log)
-      setMatches((prev) => [...prev, log[0].data])
+      let matchedEvent = log.filter((l) => l.args.from === address)[0].args
+
+      let fromName = people.filter(
+        (p: Player) => p.address === matchedEvent.from
+      )[0]
+      let toName = people.filter(
+        (p: Player) => p.address === matchedEvent.to
+      )[0]
+
+      console.log('from and to', fromName, toName)
+      setMatch({ from: fromName, to: toName, message: 'i wuv u' })
+      setShowResults(true)
     },
   })
 
   return (
     <Layout>
-      {showResults ? (
+      {!showResults ? (
         <>
           <Text fontSize={'3xl'}>Send a signal!</Text>
           <Text>{timeLeft}s</Text>
@@ -93,15 +95,15 @@ export default function Game(props: any) {
         </>
       ) : (
         <>
-          {myMatch ? (
+          {match ? (
             <>
               <Text fontSize={'3xl'}>It's a Match! 💞</Text>
 
               <VStack my={12}>
                 <Text fontSize={'xl'}>
-                  {myMatch?.from} 🔗 {myMatch?.to}
+                  {match.from.name} 🔗 {match.to.name}
                 </Text>
-                <Text>{myMatch?.message}</Text>
+                <Text>{match?.message}</Text>
               </VStack>
             </>
           ) : (
