@@ -52,11 +52,16 @@ io.on('connection', (socket) => {
     connected: true,
   })
 
-  socket.on('create', function (name, address, room, callback) {
+  socket.on('create', async function (name, address, room, callback) {
     console.log(`called with arguments ${name} ${address} ${room}`)
     socket.data.name = name
     socket.data.address = address
     socket.join(room)
+    const details = await fetchDetails()
+    io.to('room').emit('details', details)
+
+    socket.to('room').emit(room_names_addresses)
+
     callback()
   })
 
