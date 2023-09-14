@@ -25,6 +25,7 @@ const socket = io('localhost:3001')
 
 export default function App({ Component, pageProps }: AppProps) {
   const [players, setPlayers] = useState<Player[]>([])
+  const [gameStarted, setGameStarted] = useState(false)
 
   useEffect(() => {
     // function onConnect() {
@@ -41,14 +42,18 @@ export default function App({ Component, pageProps }: AppProps) {
       setPlayers(players)
     }
 
+    const onGameStart = () => setGameStarted(true)
+
     // socket.on('connect', onConnect)
     // socket.on('disconnect', onDisconnect)
     socket.on('details', onChangePlayers)
+    socket.on('startGame', onGameStart)
 
     return () => {
       // socket.off('connect', onConnect)
       // socket.off('disconnect', onDisconnect)
       socket.off('details', onChangePlayers)
+      socket.off('startGame', onGameStart)
     }
   }, [])
 
@@ -56,7 +61,12 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <WagmiConfig config={wagmiConfig}>
         <ChakraProvider>
-          <Component {...pageProps} socket={socket} people={players} />
+          <Component
+            {...pageProps}
+            socket={socket}
+            people={players}
+            gameStarted={gameStarted}
+          />
         </ChakraProvider>
       </WagmiConfig>
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
