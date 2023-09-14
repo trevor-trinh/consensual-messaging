@@ -24,7 +24,10 @@ export default function Join(props: any) {
     }
 
     socket.emit('create', router.query.name, address, code, () => {
-      router.push({ pathname: '/lobby', query: { name: router.query.name } })
+      router.push({
+        pathname: '/lobby',
+        query: { name: router.query.name, room: code },
+      })
     })
   }
 

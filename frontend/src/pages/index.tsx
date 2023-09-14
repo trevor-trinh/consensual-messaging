@@ -35,10 +35,8 @@ export default function Home(props: any) {
     }
 
     const code = 'ABCDEF'
-    socket.emit('create', name, address, code, (response: any) => {
-      console.log(response)
-      console.log('Back from create')
-      router.push({ pathname: '/lobby', query: { name, code } })
+    socket.emit('create', name, address, code, () => {
+      router.push({ pathname: '/lobby', query: { name, room: code } })
     })
   }
 

@@ -61,14 +61,17 @@ io.on('connection', (socket) => {
   })
 
   socket.on('fetchusers', async function (room, callback) {
+    console.log(room)
     const roomsockets = await io.in(room).fetchSockets()
     let room_names_addresses = [] // {name: name, address: address}
+    console.log(roomsockets)
     for (let i = 0; i < roomsockets.length; i++) {
       room_names_addresses.push({
         name: roomsockets[i].data.name,
         address: roomsockets[i].data.address,
       })
     }
+    console.log(room_names_addresses)
     callback(room_names_addresses)
   })
 

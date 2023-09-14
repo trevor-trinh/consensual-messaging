@@ -6,28 +6,31 @@ import { useEffect, useState } from 'react'
 export default function Lobby(props: any) {
   const router = useRouter()
   const { socket } = props
+  const { name, room } = router.query
+  const [people, setPeople] = useState([])
 
-  const [code, setCode] = useState('')
   useEffect(() => {
     if (!router.query.name) {
       router.push('/')
     }
-  }, [])
-
+    console.log(room)
+    socket.emit('fetchusers', room, (people: any) => setPeople(people))
+  }, [setPeople])
+  console.log(people)
   const handleStart = () => {
     router.push({
       pathname: '/game',
-      query: { name: router.query.name },
+      query: { name, room },
     })
   }
 
   return (
     <Layout>
-      <Text>Hello {router.query.name}!</Text>
-      <Text fontSize={'4xl'}>{code}</Text>
+      <Text>Hello {name}!</Text>
+      <Text fontSize={'4xl'}>{room}</Text>
       <UnorderedList>
-        {['person1', 'person2', 'person3'].map((person) => (
-          <ListItem>{person}</ListItem>
+        {people.map((person: any) => (
+          <ListItem>{person.name}</ListItem>
         ))}
       </UnorderedList>
       <Button w="xs" onClick={handleStart}>
