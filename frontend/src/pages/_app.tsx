@@ -4,9 +4,10 @@ import { ChakraProvider } from '@chakra-ui/react'
 import { EthereumClient, w3mConnectors, w3mProvider } from '@web3modal/ethereum'
 import { Web3Modal } from '@web3modal/react'
 import { configureChains, createConfig, WagmiConfig } from 'wagmi'
-import { polygonMumbai } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
+import { Toaster } from 'react-hot-toast'
 
-const chains = [polygonMumbai]
+const chains = [sepolia]
 const projectId = 'c7e93f07bce83658ef0667c21231faa2'
 
 const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
@@ -26,6 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
         </ChakraProvider>
       </WagmiConfig>
       <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+      <Toaster />
     </>
   )
 }
