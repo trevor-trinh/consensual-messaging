@@ -52,10 +52,11 @@ io.on('connection', (socket) => {
     connected: true,
   })
 
-  socket.on('create', function (name, address, room) {
+  socket.on('create', function (name, address, room, callback) {
     console.log(`called with arguments ${name} ${address} ${room}`)
     users.push({ name, address })
     socket.join(room)
+    callback()
   })
 
   socket.on('disconnect', () => {
