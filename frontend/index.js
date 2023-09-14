@@ -54,9 +54,22 @@ io.on('connection', (socket) => {
 
   socket.on('create', function (name, address, room, callback) {
     console.log(`called with arguments ${name} ${address} ${room}`)
-    users.push({ name, address })
+    socket.data.name = name
+    socket.data.address = address
     socket.join(room)
     callback()
+  })
+
+  socket.on('fetchusers', async function (room, callback) {
+    const roomsockets = await io.in(room).fetchSockets()
+    let room_names_addresses = [] // {name: name, address: address}
+    for (let i = 0; i < roomsockets.length; i++) {
+      room_names_addresses.push({
+        name: roomsockets[i].data.name,
+        address: roomsockets[i].data.address,
+      })
+    }
+    callback(room_names_addresses)
   })
 
   socket.on('disconnect', () => {
