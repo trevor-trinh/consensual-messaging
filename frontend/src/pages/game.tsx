@@ -9,6 +9,9 @@ import {
   Wrap,
   WrapItem,
   Button,
+  Box,
+  HStack,
+  VStack,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
@@ -25,8 +28,16 @@ export default function Game(props: any) {
   const [selectedPlayer, setSelectedPlayer] = useState<Player>()
   const [showResults, setShowResults] = useState(false)
   const [matches, setMatches] = useState<MatchEvent[]>([])
+  const [myMatch, setMyMatch] = useState<MatchEvent>()
 
   const { address, isConnecting, isDisconnected } = useAccount()
+
+  useEffect(() => {
+    const foundMatch = matches.find(
+      (match) => match.from === address || match.to === address
+    )
+    setMyMatch(foundMatch)
+  }, [matches, address])
 
   // timer for round to end
   // useEffect(() => {
@@ -43,13 +54,13 @@ export default function Game(props: any) {
     eventName: 'MatchEvent',
     listener(log) {
       console.log(log)
-      setMatches((prev) => prev.push(log))
+      setMatches((prev) => [...prev, log[0].data])
     },
   })
 
   return (
     <Layout>
-      {!showResults ? (
+      {showResults ? (
         <>
           <Text fontSize={'3xl'}>Send a signal!</Text>
           <Text>{timeLeft}s</Text>
@@ -82,8 +93,20 @@ export default function Game(props: any) {
         </>
       ) : (
         <>
-          <Text fontSize={'3xl'}>It's a Match!</Text>
+          {myMatch ? (
+            <>
+              <Text fontSize={'3xl'}>It's a Match! 💞</Text>
 
+              <VStack my={12}>
+                <Text fontSize={'xl'}>
+                  {myMatch?.from} 🔗 {myMatch?.to}
+                </Text>
+                <Text>{myMatch?.message}</Text>
+              </VStack>
+            </>
+          ) : (
+            <Text fontSize={'3xl'}>No matches 🥹</Text>
+          )}
           <Button onClick={() => router.push('/')}>Play Again</Button>
         </>
       )}
