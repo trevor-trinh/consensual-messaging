@@ -3,15 +3,15 @@ import { Button, Input, Text } from '@chakra-ui/react'
 import { useState } from 'react'
 import Layout from '@/components/Layout'
 
-export default function Home() {
+export default function Home(props: any) {
   const router = useRouter()
   const [name, setName] = useState('')
-
   const handleJoin = () => {
     if (!name) {
       alert('Please enter your name')
       return
     }
+
     router.push({ pathname: '/join', query: { name: name } })
   }
 

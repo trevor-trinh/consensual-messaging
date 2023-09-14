@@ -3,9 +3,10 @@ import { useEffect, useState } from 'react'
 import { Text, Input, Button } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 
-export default function Join() {
+export default function Join(props: any) {
   const router = useRouter()
   const [code, setCode] = useState('')
+  const { socket } = props
 
   useEffect(() => {
     if (!router.query.name) {
@@ -14,7 +15,9 @@ export default function Join() {
   }, [])
 
   const handleJoin = () => {
-    router.push({ pathname: '/lobby', query: { name: router.query.name } })
+    socket.emit('join', router.query.name, code, (response: any) => {
+      router.push({ pathname: '/lobby', query: { name: router.query.name } })
+    })
   }
 
   return (

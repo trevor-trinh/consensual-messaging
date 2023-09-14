@@ -1,19 +1,29 @@
 import Layout from '@/components/Layout'
 import { Text, Button, UnorderedList, ListItem } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
-export default function Lobby() {
+export default function Lobby(props: any) {
   const router = useRouter()
+  const { socket } = props
 
+  const [code, setCode] = useState('')
   useEffect(() => {
     if (!router.query.name) {
       router.push('/')
     }
+
+    socket.emit('create', router.query.name, (response: any) => {
+      console.log(response)
+      // TODO: You need to give me back a cdoe
+    })
   }, [])
 
   const handleStart = () => {
-    router.push('/game')
+    router.push({
+      pathname: '/game',
+      query: { name: router.query.name },
+    })
   }
 
   return (
