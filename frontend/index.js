@@ -82,6 +82,10 @@ io.on('connection', (socket) => {
 
   socket.on('fetchusers', fetchDetails)
 
+  socket.on('startGame', (room) => {
+    io.to(room).emit('startGame')
+  })
+
   socket.on('disconnect', () => {
     console.log('user disconnected')
   })
