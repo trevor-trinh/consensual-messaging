@@ -24,10 +24,10 @@ export default function SignalButton({
   setSelectedPlayer,
 }: Props) {
   const { config } = usePrepareContractWrite({
-    address: '0xeCB2Ed307793c124706993472514D8E2627D4173',
+    address: '0x837BBE5CCb2Bf3d4a8A04cDcf9FF2d120b084cbf',
     abi: ConsensualMessagingJson.abi,
     functionName: 'submit',
-    args: [TEST_ADDRESS, MESSAGE],
+    args: [player.address, MESSAGE],
   })
 
   const { data, write } = useContractWrite(config)
