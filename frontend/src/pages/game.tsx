@@ -9,13 +9,11 @@ import {
   Wrap,
   WrapItem,
   Button,
-  Box,
-  HStack,
   VStack,
 } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { MatchEvent, Player } from '@/types'
+import { Player } from '@/types'
 import SignalButton from '@/components/SignalButton'
 import { useAccount, useContractEvent } from 'wagmi'
 import ConsensualMessagingJson from '@/lib/abi/ConsensualMessaging.json'
@@ -29,16 +27,13 @@ export default function Game(props: any) {
   const [showResults, setShowResults] = useState(false)
   const [match, setMatch] = useState()
 
-  const { address, isConnecting, isDisconnected } = useAccount()
+  const { address } = useAccount()
 
   // timer for round to end
-  // useEffect(() => {
-  //   if (timeLeft <= 0) {
-  //     setShowResults(true)
-  //   }
-  //   const timeoutId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
-  //   return () => clearTimeout(timeoutId)
-  // }, [timeLeft])
+  useEffect(() => {
+    const timeoutId = setTimeout(() => setTimeLeft(timeLeft - 1), 1000)
+    return () => clearTimeout(timeoutId)
+  }, [timeLeft])
 
   useContractEvent({
     address: '0x837BBE5CCb2Bf3d4a8A04cDcf9FF2d120b084cbf',
