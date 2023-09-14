@@ -13,13 +13,15 @@ import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 import { Player } from '@/types'
 import SignalButton from '@/components/SignalButton'
+import { useAccount } from 'wagmi'
 
 export default function Game(props: any) {
   const router = useRouter()
+  const { people } = props
 
   const [timeLeft, setTimeLeft] = useState(30)
-  const [players, setPlayers] = useState<Player[]>()
   const [selectedPlayer, setSelectedPlayer] = useState<Player>()
+  const { address, isConnecting, isDisconnected } = useAccount()
 
   // timer for round to end
   // useEffect(() => {
@@ -33,20 +35,20 @@ export default function Game(props: any) {
   // gets the list of names+addresses from backend
   const { socket } = props
 
-  useEffect(() => {
-    // fetch('/api/game')
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     setPlayers(data)
-    //   })
-    setPlayers([
-      { name: 'player1', address: '0x123' },
-      {
-        name: 'player2',
-        address: '0x456',
-      },
-    ])
-  }, [])
+  // useEffect(() => {
+  //   // fetch('/api/game')
+  //   //   .then((res) => res.json())
+  //   //   .then((data) => {
+  //   //     setPlayers(data)
+  //   //   })
+  //   setPlayers([
+  //     { name: 'player1', address: '0x123' },
+  //     {
+  //       name: 'player2',
+  //       address: '0x456',
+  //     },
+  //   ])
+  // }, [])
 
   // could listen to events starting here
   // then when something happens just pass it to the next screen
@@ -56,10 +58,10 @@ export default function Game(props: any) {
       <Text fontSize={'3xl'}>Send a signal!</Text>
       <Text>{timeLeft}s</Text>
       <Wrap spacing={6}>
-        {players &&
-          players
-            .filter((player) => player.address !== 'CURRENT ADDRESS')
-            .map((player) => (
+        {people &&
+          people
+            .filter((player: any) => player.address !== address)
+            .map((player: any) => (
               <WrapItem key={player.name}>
                 <Card textAlign={'center'} w={'3xs'} alignItems={'center'}>
                   <CardHeader pb={0}>
