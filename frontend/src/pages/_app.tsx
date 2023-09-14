@@ -9,11 +9,22 @@ import { Toaster } from 'react-hot-toast'
 import { io } from 'socket.io-client'
 import { useState, useEffect } from 'react'
 import { Player } from '@/types'
+import { infuraProvider } from 'wagmi/providers/infura'
+import { publicProvider } from 'wagmi/providers/public'
 
-const chains = [sepolia]
+// const chains = [sepolia]
 const projectId = 'c7e93f07bce83658ef0667c21231faa2'
 
-const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
+// const { publicClient } = configureChains(chains, [w3mProvider({ projectId })])
+
+const { chains, publicClient, webSocketPublicClient } = configureChains(
+  [sepolia],
+  [
+    infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA as string }),
+    publicProvider(),
+  ]
+)
+
 const wagmiConfig = createConfig({
   autoConnect: true,
   connectors: w3mConnectors({ projectId, chains }),
