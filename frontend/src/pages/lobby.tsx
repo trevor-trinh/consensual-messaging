@@ -12,11 +12,6 @@ export default function Lobby(props: any) {
     if (!router.query.name) {
       router.push('/')
     }
-
-    socket.emit('create', router.query.name, (response: any) => {
-      console.log(response)
-      // TODO: You need to give me back a cdoe
-    })
   }, [])
 
   const handleStart = () => {
@@ -29,7 +24,7 @@ export default function Lobby(props: any) {
   return (
     <Layout>
       <Text>Hello {router.query.name}!</Text>
-      <Text fontSize={'4xl'}>CODE HERE</Text>
+      <Text fontSize={'4xl'}>{code}</Text>
       <UnorderedList>
         {['person1', 'person2', 'person3'].map((person) => (
           <ListItem>{person}</ListItem>

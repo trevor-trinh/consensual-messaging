@@ -6,6 +6,8 @@ import Layout from '@/components/Layout'
 export default function Home(props: any) {
   const router = useRouter()
   const [name, setName] = useState('')
+  const { socket } = props
+
   const handleJoin = () => {
     if (!name) {
       alert('Please enter your name')
@@ -20,7 +22,12 @@ export default function Home(props: any) {
       alert('Please enter your name')
       return
     }
-    router.push({ pathname: '/lobby', query: { name: name } })
+    const code = 'ABCDEF'
+    socket.emit('create', name, '0xsomething', code, (response: any) => {
+      console.log(response)
+      console.log('Back from create')
+      router.push({ pathname: '/lobby', query: { name, code } })
+    })
   }
 
   return (

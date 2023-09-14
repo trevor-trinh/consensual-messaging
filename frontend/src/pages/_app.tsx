@@ -18,7 +18,7 @@ const wagmiConfig = createConfig({
 })
 const ethereumClient = new EthereumClient(wagmiConfig, chains)
 
-const socket = io()
+const socket = io('localhost:3001')
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

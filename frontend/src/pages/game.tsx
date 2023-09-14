@@ -3,9 +3,11 @@ import { Text } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
 
-export default function Game() {
+export default function Game(props: any) {
   const router = useRouter()
   const [timeLeft, setTimeLeft] = useState(30)
+
+  const { socket } = props
 
   useEffect(() => {
     if (timeLeft <= 0) {

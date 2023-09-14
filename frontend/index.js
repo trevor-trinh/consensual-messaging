@@ -2,12 +2,16 @@ const express = require('express')
 const app = express()
 const http = require('http')
 const server = http.createServer(app)
-const { Server } = require('socket.io')
-const io = new Server(server)
-
-app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html')
+const io = require('socket.io')(server, {
+  cors: {
+    origin: 'http://localhost:3000',
+  },
 })
+// const io = new Server(server)
+
+// app.get('/', (req, res) => {
+//   res.sendFile(__dirname + '/index.html')
+// })
 
 // io.use(async (socket, next) => {
 //   const sessionID = socket.handshake.auth.sessionID
@@ -40,7 +44,7 @@ io.on('connection', (socket) => {
 
   // fetch existing users
   const users = []
-  socket.emit('users', users)
+  // socket.emit('users', users)
 
   // notify existing users
   socket.broadcast.emit('user connected', {
@@ -48,7 +52,9 @@ io.on('connection', (socket) => {
     connected: true,
   })
 
-  socket.on('create', function (room) {
+  socket.on('create', function (name, address, room) {
+    console.log(`called with arguments ${name} ${address} ${room}`)
+    users.push({ name, address })
     socket.join(room)
   })
 
@@ -57,6 +63,6 @@ io.on('connection', (socket) => {
   })
 })
 
-server.listen(3000, () => {
-  console.log('listening on *:3000')
+server.listen(3001, () => {
+  console.log('listening on *:3001')
 })
